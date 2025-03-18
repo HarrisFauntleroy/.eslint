@@ -9,7 +9,7 @@ import prettierPlugin from "eslint-plugin-prettier";
 import storybookPlugin from "eslint-plugin-storybook";
 import prettier from "eslint-config-prettier";
 
-/** @type {import('eslint').Linter.Config[]} */
+/** @type {import('@eslint/eslintrc').FlatConfigArray} */
 export default [
   // Ignore patterns
   {
@@ -26,9 +26,13 @@ export default [
     ],
   },
 
-  // Base config
-  { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
-  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
+  // Base config with globals
+  {
+    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+    },
+  },
 
   // Core recommended configs
   pluginJs.configs.recommended,
@@ -44,8 +48,8 @@ export default [
         version: "detect",
       },
     },
+    rules: pluginReact.configs.flat.recommended.rules,
   },
-  pluginReact.configs.flat.recommended,
 
   // Main configuration with all plugins
   {
@@ -119,8 +123,8 @@ export default [
     plugins: {
       storybook: storybookPlugin,
     },
-    extends: [storybookPlugin.configs.recommended],
     rules: {
+      ...storybookPlugin.configs.recommended.rules,
       "import/no-anonymous-default-export": "off",
     },
   },
@@ -134,5 +138,7 @@ export default [
   },
 
   // Prettier must be last
-  prettier,
+  {
+    rules: prettier.rules,
+  },
 ];
