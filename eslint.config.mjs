@@ -1,14 +1,15 @@
-import globals from "globals";
 import pluginJs from "@eslint/js";
 import json from "@eslint/json";
-import tseslint from "typescript-eslint";
+import prettier from "eslint-config-prettier";
+import importPlugin from "eslint-plugin-import";
+import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
+import prettierPlugin from "eslint-plugin-prettier";
 import pluginReact from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
-import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
-import unusedImportsPlugin from "eslint-plugin-unused-imports";
-import prettierPlugin from "eslint-plugin-prettier";
 import storybookPlugin from "eslint-plugin-storybook";
-import prettier from "eslint-config-prettier";
+import unusedImportsPlugin from "eslint-plugin-unused-imports";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 /** @type {import('@eslint/eslintrc').FlatConfigArray} */
 export default [
@@ -75,6 +76,7 @@ export default [
       "jsx-a11y": jsxA11yPlugin,
       "unused-imports": unusedImportsPlugin,
       prettier: prettierPlugin,
+      import: importPlugin, // Add import plugin
     },
     rules: {
       "react/react-in-jsx-scope": "off",
@@ -92,6 +94,26 @@ export default [
       "@typescript-eslint/no-non-null-assertion": "error",
       "prettier/prettier": "warn",
       "react-hooks/exhaustive-deps": "error",
+
+      // Import sorting
+      "import/order": [
+        "error",
+        {
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+          ],
+          "newlines-between": "never",
+          alphabetize: { order: "asc", caseInsensitive: true },
+        },
+      ],
+
+      // Prevent duplicate imports and merge them
+      "import/no-duplicates": "error",
 
       // Cleanup unused imports
       "unused-imports/no-unused-imports": "error",
