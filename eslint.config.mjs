@@ -23,6 +23,7 @@ export default [
       "vite.config.ts",
       "*.test.*",
       "*.lock",
+      "*.json",
     ],
   },
 
