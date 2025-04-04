@@ -1,5 +1,6 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
+import json from "@eslint/json";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
@@ -23,7 +24,6 @@ export default [
       "vite.config.ts",
       "*.test.*",
       "*.lock",
-      "*.json",
     ],
   },
 
@@ -31,7 +31,7 @@ export default [
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     languageOptions: {
-      globals: { ...globals.browser, ...globals.node },
+      globals: { ...globals.browser, ...globals.node, ...globals.es2021 },
     },
   },
 
@@ -50,6 +50,22 @@ export default [
       },
     },
     rules: pluginReact.configs.flat.recommended.rules,
+  },
+
+  // JSON Plugin setup
+  {
+    plugins: {
+      json,
+    },
+  },
+  {
+    files: ["**/*.json"],
+    languageOptions: {
+      parser: json,
+    },
+    rules: {
+      "json/no-duplicate-keys": "error",
+    },
   },
 
   // Main configuration with all plugins
@@ -74,12 +90,10 @@ export default [
       ],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-non-null-assertion": "error",
-      "@typescript-eslint/no-unused-vars": "error",
-      "@typescript-eslint/no-var-requires": "error",
       "prettier/prettier": "warn",
       "react-hooks/exhaustive-deps": "error",
 
-      // Unused imports rules
+      // Cleanup unused imports
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
         "warn",
@@ -138,8 +152,11 @@ export default [
     },
   },
 
-  // Prettier must be last
+  // Final Prettier configuration
   {
+    plugins: {
+      prettier: prettierPlugin,
+    },
     rules: prettier.rules,
   },
 ];
